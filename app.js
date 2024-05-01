@@ -41,7 +41,7 @@ mongoose
   .connect(process.env.CONNECTION_STRING, {
     // useNewUrlParser: true,
     //useUnifiedTopology: true,
-    dbName: "shein-database",
+    dbName: "SS-database",
   })
   .then(() => {
     console.log("Database connection is ready");
