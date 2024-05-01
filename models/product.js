@@ -11,7 +11,7 @@ const productSchema = mongoose.Schema({
   },
   longDescreption: {
     type: String,
-    default: "",
+    required : true
   },
   image: {
     type: String,
