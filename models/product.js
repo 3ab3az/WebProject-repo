@@ -5,11 +5,7 @@ const productSchema = mongoose.Schema({
     type: String,
     required: true,
   },
-  descreption: {
-    type: String,
-    required: true,
-  },
-  longDescreption: {
+  description: {
     type: String,
     required: true,
   },
@@ -19,11 +15,11 @@ const productSchema = mongoose.Schema({
   },
   moreImages: {
     type: String,
-    defult: "",
+    default: "",
   },
   price: {
     type: Number,
-    defult: 0,
+    default: 0,
   },
   Quantity: {
     type: Number,
@@ -33,23 +29,19 @@ const productSchema = mongoose.Schema({
   },
   categoryOfProduct: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "category",
+    ref: "Category",
   },
-  ratingOfproduct: {
+  rating: {
     type: Number,
     default: "0",
   },
-  numOfReviews: {
+  Reviews: {
     type: Number,
-    defult: 0,
+    default: 0,
   },
   isFeatured: {
     type: Boolean,
-    defult: false,
-  },
-  dateCreatedOfProduct: {
-    type: Date,
-    defult: Date.now,
+    default: false,
   },
 });
 

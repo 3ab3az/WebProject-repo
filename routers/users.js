@@ -5,9 +5,9 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 //GET-ALL-USERS
 router.get(`/`, async (req, res) => {
-  const userList = await User.find().select("name phone email  street city");
+  const userList = await User.find();
   if (!userList)
-    return res.status(500).json({ message: "No User in database ..." });
+    return res.status(500).json({ message: "No Product  in database ..." });
   res.status(200).send(userList);
 });
 
