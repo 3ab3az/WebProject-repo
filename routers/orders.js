@@ -3,7 +3,7 @@ const express = require("express");
 const router = express.Router();
 const OrderItem = require('../models/order-item');
 const category = require("../models/category");
-
+const Coupon = require("../models/coupon");
 router.get(`/`, async (req, res) => {
   // try {
     const orderList = await Order.find().populate('user','name').sort();
@@ -50,28 +50,37 @@ router.get(`/:id`, async (req, res) => {
 
 router.post("/", async (req, res) => {
   // try {
-    const orderItemsIds = await Promise.all(
-      req.body.orderItems.map(async (orderItem) => {
-        let newOrderItem = new OrderItem({
-          quantity: orderItem.quantity,
-          product: orderItem.product,
-          
-        });
-        newOrderItem = await newOrderItem.save();
-        return newOrderItem._id;
-      })
-    );  
-
-const totalPrices = await Promise.all(
-  orderItemsIds.map(async (orderItemId) => {
-const orderItem = await OrderItem.findById(orderItemId).populate("product","price");
-        const totalPrice = orderItem.product.price * orderItem.quantity;
-        return totalPrice;
-      })
-    );
+     const orderItemsIds = await Promise.all(
+       req.body.orderItems.map(async (orderItem) => {
+         let newOrderItem = new OrderItem({
+           quantity: orderItem.quantity,
+           product: orderItem.product,
+         });
+         newOrderItem = await newOrderItem.save();
+         return newOrderItem._id;
+       })
+     );
+ 
+     let totalPrice = 0;
+ 
+     if (req.body.couponCode) {
+       const coupon = await Coupon.findOne({
+         name: req.body.couponCode.toUpperCase(),
+       });
+       if (coupon) {
+         totalPrice = await calculateTotalPriceWithDiscount(
+           orderItemsIds,
+           coupon.discount
+         );
+       } else {
+         return res
+           .status(404)
+           .json({ success: false, message: "Coupon not found" });
+       }
+     } else {
+       totalPrice = await calculateTotalPrice(orderItemsIds);
+     }
     // console.log(totalPrice);
-
-    let totalPrice = totalPrices.reduce((a, b) => a + b, 0);
 
     let order = new Order({
       orderItems: orderItemsIds,
@@ -145,3 +154,16 @@ router.get(`/get/count`, async (req, res) => {
 
 
 module.exports = router;
+async function calculateTotalPrice(orderItemsIds) {
+  let totalPrice = 0;
+  const orderItems = await OrderItem.find({ _id: { $in: orderItemsIds } }).populate("product", "price");
+  orderItems.forEach((orderItem) => {
+    totalPrice += orderItem.product.price * orderItem.quantity;
+  });
+  return totalPrice;
+}
+
+async function calculateTotalPriceWithDiscount(orderItemsIds, discount) {
+  const totalPrice = await calculateTotalPrice(orderItemsIds);
+  return totalPrice - (totalPrice * discount) / 100;
+}
