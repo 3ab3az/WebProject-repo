@@ -29,7 +29,8 @@ const productSchema = mongoose.Schema({
   },
   categoryOfProduct: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Category",
+    ref: 'Category',
+    required:true
   },
   rating: {
     type: Number,

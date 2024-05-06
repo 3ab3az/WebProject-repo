@@ -5,13 +5,11 @@ const categorySchema = mongoose.Schema({
     type: String,
     required: true,
   },
-  Categoryicon: {
+  CategoryIcon: {
     type: String,
   },
   color: {
     type: String,
   },
 });
-const Category = mongoose.model("Category", categorySchema);
-
-module.exports = Category;
+module.exports = mongoose.model("Category", categorySchema);

@@ -41,7 +41,6 @@ mongoose
   .connect(process.env.CONNECTION_STRING, {
     // useNewUrlParser: true,
     //useUnifiedTopology: true,
-    dbName: "shein-database",
   })
   .then(() => {
     console.log("Database connection is ready");
