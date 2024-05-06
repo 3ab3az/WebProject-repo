@@ -25,6 +25,8 @@ const ProductsRouter = require("./routers/products");
 const OrdersRouter = require("./routers/orders");
 const CategoriesRouter = require("./routers/categories");
 const UsersRouter = require("./routers/users");
+const CouponRouter = require("./routers/coupon");
+
 //const authexpressJwt = require("./helper/jwt");
 
 // Define API URL and port
@@ -35,6 +37,7 @@ app.use(`${api}/products`, ProductsRouter);
 app.use(`${api}/orders`, OrdersRouter);
 app.use(`${api}/categories`, CategoriesRouter);
 app.use(`${api}/users`, UsersRouter);
+app.use(`${api}/coupon`, CouponRouter);
 
 // MongoDB connection
 mongoose
