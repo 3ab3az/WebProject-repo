@@ -3,9 +3,9 @@ const OrderItem = require('../models/order-item');
 const orderSchema = mongoose.Schema({
   orderItems: [
     {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'OrderItem',
-    required: true,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'OrderItem',
+      required: true,
     },
   ],
   shippingAddress: {
@@ -33,10 +33,9 @@ const orderSchema = mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
   },
-  dateOrdered:
-  {
-  type:Date ,
-  default: Date.now,
+  dateOrdered: {
+    type: Date,
+    default: Date.now,
   },
   promoCode: {
     type:  String,
@@ -45,7 +44,13 @@ const orderSchema = mongoose.Schema({
   totalPrice: {
     type: Number,
   },
-  
+  discount: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Coupon',
+  },
+  PriceAfterDiscount: {
+    type: Number,
+  },
 });
 
 exports.Order = mongoose.model("Order", orderSchema);
