@@ -1,17 +1,18 @@
 const mongoose = require("mongoose");
 
 const couponSchema = mongoose.Schema({
-    name: {
+  name: {
     type: String,
     unique: true,
     uppercase: true,
-    },
-    expiry: {
+  },
+  expiry: {
     type: Date,
-    },
-    discount: {
+  },
+  discount: {
     type: Number,
-    }
-})
+  },
+});
 
-module.exports = mongoose.model("PromoCode", couponSchema);
+//module.exports = mongoose.model("PromoCode", couponSchema);
+exports.Coupon = mongoose.model("Coupon", couponSchema);
