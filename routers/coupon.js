@@ -1,4 +1,4 @@
-const { Coupon } = require("../models/coupon");
+const  Coupon  = require("../models/coupon");
 const express = require("express");
 const router = express.Router();
 
