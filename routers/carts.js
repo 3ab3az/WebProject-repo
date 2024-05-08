@@ -1,61 +1,59 @@
-const Cart = require("../models/cart");
 const express = require("express");
 const router = express.Router();
-const Product = require("../models/product");
+const Cart = require("../models/cart");
 
-// GET user's cart
+// Route to get user's cart
 router.get("/:userId", async (req, res) => {
   try {
-    const cart = await Cart.findOne({ userId: req.params.userId });
-    if (!cart) {
-      return res.status(404).json({ message: "No Items in the Cart yet" });
-    }
+    const userId = req.params.userId;
+    const cart = await Cart.findOne({ userId }).populate("items.productId");
     res.json(cart);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
 });
-
-// ADD item to cart
-router.post("/:userId", async (req, res) => {
-  const { productId, quantity } = req.body;
-
-  let cart = await Cart.findOne({ userId: req.params.userId });
-  if (!cart) {
-    cart = new Cart({ userId: req.params.userId, items: [] });
-  }
-
-  const itemIndex = cart.items.findIndex(
-    (item) => item.productId.toString() === productId
-  );
-  if (itemIndex !== -1) {
-    cart.items[itemIndex].quantity += quantity;
-  } else {
-    cart.items.push({ productId, quantity });
-  }
-
-  cart = await cart.save();
-  if (!cart) return res.status(400).send("the cart  cannot be created!");
-
-  res.send(cart);
-});
-
-// REMOVE item from cart
-router.delete("/:userId/remove/:productId", async (req, res) => {
+router.post("/cart/:userId/add", async (req, res) => {
   try {
-    const cart = await Cart.findOne({ userId: req.params.userId });
-    if (!cart) {
-      return res.status(404).json({ message: "Cart not found" });
+    const userId = req.params.userId;
+    const { productId, quantity } = req.body;
+
+    // Retrieve the product from the database
+    const product = await Product.findById(productId);
+
+    // Check if the product exists and if there is enough stock
+    if (!product || product.stock < quantity) {
+      return res
+        .status(400)
+        .json({ message: "Insufficient stock for the requested quantity." });
     }
 
-    cart.items = cart.items.filter(
-      (item) => item.productId.toString() !== req.params.productId
-    );
+    let cart = await Cart.findOne({ userId });
+
+    if (!cart) {
+      cart = new Cart({ userId, items: [] });
+    }
+
+    // Check if item already exists in cart
+    const index = cart.items.findIndex((item) => item.productId == productId);
+    if (index !== -1) {
+      // Check if adding more of this item exceeds available stock
+      if (product.stock< cart.items[index].quantity + quantity) {
+        return res
+          .status(400)
+          .json({ message: "Adding this quantity exceeds available stock." });
+      }
+      cart.items[index].quantity += quantity;
+    } else {
+      cart.items.push({ productId, quantity });
+    }
+
     await cart.save();
-    res.json(cart);
+    res.status(201).json(cart);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
 });
+
+// Add routes for removing items, updating quantities, etc.
 
 module.exports = router;

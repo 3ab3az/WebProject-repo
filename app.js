@@ -26,6 +26,7 @@ const OrdersRouter = require("./routers/orders");
 const CategoriesRouter = require("./routers/categories");
 const UsersRouter = require("./routers/users");
 const CouponRouter = require("./routers/coupon");
+const cartRouters = require("./routers/carts");
 
 //const authexpressJwt = require("./helper/jwt");
 
@@ -38,6 +39,7 @@ app.use(`${api}/orders`, OrdersRouter);
 app.use(`${api}/categories`, CategoriesRouter);
 app.use(`${api}/users`, UsersRouter);
 app.use(`${api}/coupon`, CouponRouter);
+app.use(`${api}/carts`, cartRouters);
 
 // MongoDB connection
 mongoose
