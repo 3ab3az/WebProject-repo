@@ -32,7 +32,7 @@ const cartRouters = require("./routers/carts");
 
 // Define API URL and port
 const api = process.env.API_URL || "/api";
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3001;
 
 app.use(`${api}/products`, ProductsRouter);
 app.use(`${api}/orders`, OrdersRouter);

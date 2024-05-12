@@ -1,4 +1,4 @@
-const Category  = require("../models/category");
+const Category = require("../models/category");
 const express = require("express");
 const router = express.Router();
 
@@ -30,8 +30,7 @@ router.post("/", async (req, res) => {
   });
   category = await category.save();
 
-  if (!category) 
-  return res.status(400).send("the category cannot be created!");
+  if (!category) return res.status(400).send("the category cannot be created!");
 
   res.send(category);
 });
@@ -40,8 +39,8 @@ router.put("/:id", async (req, res) => {
   const category = await Category.findByIdAndUpdate(
     req.params.id,
     {
-      name: req.body.name,
-      icon: req.body.icon || category.icon,
+      CategoryName: req.body.CategoryName,
+      CategoryIcon: req.body.CategoryIcon,
       color: req.body.color,
     },
     { new: true }
@@ -53,7 +52,7 @@ router.put("/:id", async (req, res) => {
 });
 
 router.delete("/:id", (req, res) => {
-  Category.findByIdAndRemove(req.params.id)
+  Category.findByIdAndDelete(req.params.id)
     .then((category) => {
       if (category) {
         return res

@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const Cart = require("../models/cart");
+const {Product} = require('../models/product');
 
 // Route to get user's cart
 router.get("/:userId", async (req, res) => {
@@ -12,8 +13,8 @@ router.get("/:userId", async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 });
-router.post("/cart/:userId/add", async (req, res) => {
-  try {
+router.post("/:userId/add", async (req, res) => {
+ // try {
     const userId = req.params.userId;
     const { productId, quantity } = req.body;
 
@@ -49,9 +50,9 @@ router.post("/cart/:userId/add", async (req, res) => {
 
     await cart.save();
     res.status(201).json(cart);
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
+  // } catch (err) {
+  //   res.status(500).json({ message: err.message });
+  // }
 });
 
 // Add routes for removing items, updating quantities, etc.

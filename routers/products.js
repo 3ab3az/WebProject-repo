@@ -15,7 +15,9 @@ const storage = multer.diskStorage({
     cb(null, file.fieldname + "-" + uniqueSuffix);
   },
 });
+
 const uploadOption = multer({ storage: storage });
+
 router.get(`/`, async (req, res) => {
   const productList = await Product.find();
   if (!productList) {
@@ -68,7 +70,7 @@ router.put("/:id", async (req, res) => {
   if (!Product.isValidObjectId(req.params.id)) {
     return res.status(400).send("Invalid Product Id");
   }
-  const category = await Category.findById(req.body.category);
+  const category = await Category.findOne(req.body.category);
   if (!category) return res.status(400).send("Invalid Category");
 
   const product = await Product.findByIdAndUpdate(
